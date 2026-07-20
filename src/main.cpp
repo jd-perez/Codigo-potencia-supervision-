@@ -1,28 +1,47 @@
 #include <Arduino.h>
+#include "shiftreg_in.hpp"
+#include "shiftreg_out.hpp"
 #include "traffic_controller.hpp"
 
-// Se genera una instancia del controlador
-TrafficController control_prueba;
-ShiftRegIn entradas_prueba;
-ShiftRegOut salidas_prueba;
+
+// Global supervisor instance
+TrafficController system_supervisor;
 
 void setup() {
-    //Se inicia el sistema desde ControladorTrafico (pero también se podría directo con los registros)
-    control_prueba.begin();
-
-    //Cuano no sea necesario el uso de ambas entradas y salidas, se pueden inicializar individualmente las funciones
-    entradas_prueba.begin();
-    salidas_prueba.begin();
+    // 115200 baud rate
+    Serial.begin(115200);
+    
+    // Brief delay to ensure serial monitor connection stabilizes 
+    delay(500);
+    
+    system_supervisor.begin();
+    Serial.println("System Initialized. Starting hardware supervision...");
 }
 
 void loop() {
-    //Se revisa con ControladorTrafico si hubo algun cambio de estado en los pines de entrada y lo refleja en la salida
-    control_prueba.update();
+    system_supervisor.update();
+    delay(20); 
 }
 
+#if 0 //code for arduino nano replacement
+#include <Arduino.h>
+#include "traffic_controller.hpp"
 
+// Instancia global del supervisor¿
+TrafficController system_supervisor;
 
+void setup() {
+    Serial.begin(115200);
+    delay(500);
+    
+    system_supervisor.begin();
+}
 
+void loop() {
+    system_supervisor.update();
+    delay(20); 
+}
+#endif
 
 
 
